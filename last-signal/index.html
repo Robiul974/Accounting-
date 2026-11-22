@@ -69,6 +69,14 @@
   }
   .beamline { width:min(70vw,420px); height:2px; background:linear-gradient(90deg,transparent,#ffd76a,transparent); box-shadow:0 0 12px rgba(255,215,106,.8); }
   .sub { font-size:clamp(12px,3vw,16px); color:#8fc4ee; letter-spacing:2px; }
+  .credit {
+    margin-top:6px; font-size:clamp(11px,2.6vw,14px); letter-spacing:2px;
+    opacity:0; animation:creditFade 2.4s ease 0.9s forwards;
+    color:#5d89b8;
+  }
+  .credit a { color:#8fc4ee; text-decoration:none; pointer-events:auto; border-bottom:1px dotted #34507a; }
+  .credit a:active { color:#cfe8ff; }
+  @keyframes creditFade { to { opacity:1; } }
   .howto { font-size:clamp(11px,2.6vw,14px); line-height:1.9; color:#6f9cc7; max-width:560px; letter-spacing:1px; }
   .howto b { color:#cfe8ff; }
   .btn {
@@ -131,6 +139,7 @@
     The lamp drains constantly. Three hearts. Survive 90 seconds per level.
   </div>
   <button class="btn" id="playBtn">LIGHT THE LAMP</button>
+  <div class="credit">&#9873; MD ROBIUL AWWOAL &mdash; <a href="mailto:mdrobiulawwoal@gmail.com">mdrobiulawwoal@gmail.com</a></div>
 </div>
 
 <div class="overlay hidden" id="pauseScreen">

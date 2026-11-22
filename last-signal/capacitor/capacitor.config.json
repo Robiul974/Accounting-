@@ -1,0 +1,12 @@
+{
+  "appId": "com.robiul974.lastsignal",
+  "appName": "Last Signal",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#02040a"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

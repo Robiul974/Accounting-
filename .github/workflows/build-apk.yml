@@ -1,0 +1,54 @@
+name: Build Last Signal APK
+
+on:
+  push:
+    branches: ["vibe/last-signal-30249c", "main"]
+    paths: ["last-signal/**", ".github/workflows/build-apk.yml"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: last-signal/capacitor
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Capacitor
+        run: npm install
+
+      - name: Copy game into www/
+        run: npm run copy-game
+
+      - name: Create Android project
+        run: npx --yes cap add android
+
+      - name: Sync
+        run: npx cap sync android
+
+      - name: Build debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Rename APK
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk dist/LastSignal-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LastSignal-debug-apk
+          path: last-signal/capacitor/dist/LastSignal-debug.apk
+          retention-days: 90

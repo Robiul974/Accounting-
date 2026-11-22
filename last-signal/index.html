@@ -77,6 +77,37 @@
   .credit a { color:#8fc4ee; text-decoration:none; pointer-events:auto; border-bottom:1px dotted #34507a; }
   .credit a:active { color:#cfe8ff; }
   @keyframes creditFade { to { opacity:1; } }
+  .btnrow { display:flex; gap:12px; margin-top:2px; }
+  .btn.small { font-size:14px; padding:10px 24px; letter-spacing:2px; }
+  .setrow {
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:center;
+    font-size:13px; letter-spacing:2px; color:#8fc4ee; margin:4px 0;
+  }
+  .setrow button {
+    font-family:inherit; min-width:110px; padding:9px 0; font-size:14px; letter-spacing:2px;
+    color:#04121f; background:linear-gradient(180deg,#9fe0ff,#48b6ff); border:0; border-radius:8px;
+    cursor:pointer; pointer-events:auto; box-shadow:0 0 14px rgba(90,190,255,.5);
+  }
+  .setrow input[type=range] { width:180px; pointer-events:auto; accent-color:#48b6ff; }
+  .lvlgrid { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .lvlgrid button {
+    font-family:inherit; width:42px; height:36px; font-size:14px; border-radius:7px; cursor:pointer;
+    border:1px solid #34507a; background:#0a1526; color:#8fc4ee; pointer-events:auto;
+  }
+  .lvlgrid button.sel {
+    background:linear-gradient(180deg,#9fe0ff,#48b6ff); color:#04121f; border-color:transparent;
+    box-shadow:0 0 12px rgba(90,190,255,.6);
+  }
+  .rulesBox {
+    text-align:left; max-width:620px; font-size:clamp(12px,3vw,15px); line-height:2; color:#b7d6f0;
+    font-family:"Noto Sans Bengali","Hind Siliguri",Vrinda,"Segoe UI",sans-serif;
+    background:rgba(8,18,36,.55); border:1px solid #23395e; border-radius:12px; padding:14px 20px;
+    max-height:56vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .rulesBox b { color:#ffd76a; }
+  .rulesBox .h { color:#9fe0ff; letter-spacing:1px; }
+  #settingsScreen { z-index:11; }
+  #rulesScreen { z-index:12; }
   .howto { font-size:clamp(11px,2.6vw,14px); line-height:1.9; color:#6f9cc7; max-width:560px; letter-spacing:1px; }
   .howto b { color:#cfe8ff; }
   .btn {
@@ -139,13 +170,20 @@
     The lamp drains constantly. Three hearts. Survive 90 seconds per level.
   </div>
   <button class="btn" id="playBtn">LIGHT THE LAMP</button>
+  <div class="btnrow">
+    <button class="btn ghost small" id="settingsBtn">SETTINGS / সেটিংস</button>
+    <button class="btn ghost small" id="rulesBtn">RULES / নিয়ম</button>
+  </div>
   <div class="credit">&#9873; MD ROBIUL AWWOAL &mdash; <a href="mailto:mdrobiulawwoal@gmail.com">mdrobiulawwoal@gmail.com</a></div>
 </div>
 
 <div class="overlay hidden" id="pauseScreen">
   <div class="title" style="font-size:clamp(24px,6vw,44px)">PAUSED</div>
   <button class="btn" id="resumeBtn">RESUME</button>
-  <button class="btn ghost" id="pauseRestartBtn">RESTART</button>
+  <div class="btnrow">
+    <button class="btn ghost small" id="settingsBtn2">SETTINGS</button>
+    <button class="btn ghost small" id="pauseRestartBtn">RESTART</button>
+  </div>
 </div>
 
 <div class="overlay hidden" id="overScreen">
@@ -153,6 +191,42 @@
   <div class="beamline" style="background:linear-gradient(90deg,transparent,#ff5d7e,transparent)"></div>
   <div class="stats" id="finalStats"></div>
   <button class="btn" id="restartBtn">RELIGHT</button>
+</div>
+
+<div class="overlay hidden" id="settingsScreen">
+  <div class="title" style="font-size:clamp(20px,5vw,36px)">SETTINGS</div>
+  <div class="setrow"><span>শব্দ / SOUND</span><button id="soundToggle">ON</button></div>
+  <div class="setrow"><span>ভলিউম / VOLUME</span><input type="range" id="volSlider" min="0" max="100" value="50"></div>
+  <div class="setrow" style="flex-direction:column;gap:10px">
+    <span>শুরুর লেভেল / START LEVEL</span>
+    <div class="lvlgrid" id="lvlBtns"></div>
+  </div>
+  <button class="btn" id="settingsBack">BACK / ফিরে যাও</button>
+</div>
+
+<div class="overlay hidden" id="rulesScreen">
+  <div class="title" style="font-size:clamp(20px,5vw,36px)">&#9873; নিয়মাবলী</div>
+  <div class="rulesBox">
+    <div class="h"><b>মূল নিয়ম</b></div>
+    • বিম (আলোর রশ্মি) নিজে নিজে ঘোরে — তুমি সরাসরি নিয়ন্ত্রণ করতে পারবে না।<br>
+    • <b>SPACE</b> চাপো বা স্ক্রিনে <b>ট্যাপ</b> করো — বিম একটা নির্দিষ্ট কোণে নড়বে (nudge)।<br>
+    • <b>দৌড়ানোর সময় nudge কাজ করবে না</b> — দাঁড়িয়ে থেকে signal দাও।<br><br>
+    <div class="h"><b>প্রতি লেভেলের nudge নিয়ম</b></div>
+    লেভেল ১: +১৫° &nbsp;|&nbsp; লেভেল ২: +৩০° &nbsp;|&nbsp; লেভেল ৩: −১৫°<br>
+    লেভেল ৪: +১৫/+৩০ পালা করে &nbsp;|&nbsp; লেভেল ৫: প্রতি চাপে দিক উল্টায় (±১৫°)<br>
+    লেভেল ৬: −৩০° &nbsp;|&nbsp; লেভেল ৭: সাইক্লার &nbsp;|&nbsp; লেভেল ৮+: এলোমেলো (CHAOS)<br><br>
+    <div class="h"><b>দানব ও ফুয়েল</b></div>
+    • আলোয় ধরা দানব <b>পুড়ে যায়</b> আর <b>ফুয়েল অর্ব</b> ফেলে দেয়।<br>
+    • Keeper দিয়ে অর্ব তুলো — ফুয়েল ভরবে, স্কোর বাড়বে।<br>
+    • ল্যাম্পের ফুয়েল সবসময় কমে। ফুয়েল <b>শূন্য</b> হলে বিম ডিম হবে ও দানবরা দ্রুত হবে!<br>
+    • দানব লাইটহাউস ছুঁলে <b>১টা হার্ট</b> কাটবে — মোট <b>৩টা হার্ট</b>।<br><br>
+    <div class="h"><b>লেভেল ও স্কোর</b></div>
+    • প্রতি লেভেল <b>৯০ সেকেন্ড</b>; শেষে নতুন nudge নিয়ম আর দ্রুত দানব।<br>
+    • স্কোর = পোড়ানো দানব + জমা করা অর্ব।<br>
+    • <b>WASD / Arrow keys</b> = keeper চালাও; মোবাইলে keeper-এর কাছে touch করে <b>drag</b>।<br>
+    • <b>P</b> = pause, <b>M</b> = সাউন্ড চালু/বন্ধ।
+  </div>
+  <button class="btn" id="rulesBack">BACK / ফিরে যাও</button>
 </div>
 
 <script>
@@ -178,7 +252,17 @@
     overScreen: document.getElementById("overScreen"),
     finalStats: document.getElementById("finalStats"),
     lvlBanner: document.getElementById("lvlBanner"),
-    hint: document.getElementById("hint")
+    hint: document.getElementById("hint"),
+    settingsScreen: document.getElementById("settingsScreen"),
+    rulesScreen: document.getElementById("rulesScreen"),
+    soundToggle: document.getElementById("soundToggle"),
+    volSlider: document.getElementById("volSlider"),
+    lvlBtns: document.getElementById("lvlBtns"),
+    settingsBtn: document.getElementById("settingsBtn"),
+    settingsBtn2: document.getElementById("settingsBtn2"),
+    rulesBtn: document.getElementById("rulesBtn"),
+    settingsBack: document.getElementById("settingsBack"),
+    rulesBack: document.getElementById("rulesBack")
   };
 
   var NUDGE_RULES = [
@@ -232,6 +316,51 @@
   var spawnTimer = 0;
   var lastFrame = 0;
   var audioCtx = null, masterGain = null, muted = false;
+
+  var MAX_LEVEL_SELECT = 8;
+  var settings = { sound: true, volume: 50, startLevel: 1 };
+  try {
+    var savedSettings = JSON.parse(localStorage.getItem("lastSignalSettings") || "{}") || {};
+    if (typeof savedSettings.sound === "boolean") settings.sound = savedSettings.sound;
+    if (typeof savedSettings.volume === "number") settings.volume = clamp(savedSettings.volume, 0, 100);
+    if (typeof savedSettings.startLevel === "number") settings.startLevel = clamp(savedSettings.startLevel | 0, 1, MAX_LEVEL_SELECT);
+  } catch (e) {}
+  function saveSettings() { try { localStorage.setItem("lastSignalSettings", JSON.stringify(settings)); } catch (e) {} }
+
+  function applyAudioSettings() {
+    muted = !settings.sound;
+    if (masterGain) masterGain.gain.value = settings.volume / 100;
+    el.soundToggle.textContent = settings.sound ? "চালু ON" : "বন্ধ OFF";
+    el.volSlider.value = settings.volume;
+  }
+
+  var settingsReturn = "start";
+  function showSettings(returnTo) {
+    settingsReturn = returnTo;
+    el.settingsScreen.classList.remove("hidden");
+    (returnTo === "pause" ? el.pauseScreen : el.startScreen).classList.add("hidden");
+  }
+  function hideSettings() {
+    el.settingsScreen.classList.add("hidden");
+    (settingsReturn === "pause" ? el.pauseScreen : el.startScreen).classList.remove("hidden");
+  }
+  function buildLevelButtons() {
+    el.lvlBtns.innerHTML = "";
+    for (var i = 1; i <= MAX_LEVEL_SELECT; i++) {
+      (function (n) {
+        var b = document.createElement("button");
+        b.textContent = n;
+        if (n === settings.startLevel) b.className = "sel";
+        b.addEventListener("click", function () {
+          settings.startLevel = n;
+          saveSettings();
+          buildLevelButtons();
+          tone(660, 0.06, "sine", 0.10);
+        });
+        el.lvlBtns.appendChild(b);
+      })(i);
+    }
+  }
 
   function resize() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -287,7 +416,7 @@
       if (!AC) return;
       audioCtx = new AC();
       masterGain = audioCtx.createGain();
-      masterGain.gain.value = 0.5;
+      masterGain.gain.value = settings.volume / 100;
       masterGain.connect(audioCtx.destination);
     }
     if (audioCtx.state === "suspended") audioCtx.resume();
@@ -344,8 +473,8 @@
 
   function startGame() {
     state.mode = "playing";
-    state.level = 1;
-    state.ruleIndex = 0;
+    state.level = clamp(settings.startLevel | 0, 1, 64);
+    state.ruleIndex = Math.min(state.level - 1, NUDGE_RULES.length - 1);
     state.score = 0;
     state.hearts = 3;
     state.fuel = 100;
@@ -1096,6 +1225,43 @@
   });
   el.pauseBtn.addEventListener("click", function (e) { e.stopPropagation(); togglePause(); });
 
+  el.settingsBtn.addEventListener("click", function () { showSettings("start"); });
+  el.settingsBtn2.addEventListener("click", function () { showSettings("pause"); });
+  el.settingsBack.addEventListener("click", function () { hideSettings(); });
+  var rulesFrom = "start";
+  el.rulesBtn.addEventListener("click", function () {
+    if (!el.settingsScreen.classList.contains("hidden")) {
+      el.settingsScreen.classList.add("hidden");
+      rulesFrom = "settings";
+    } else {
+      rulesFrom = settingsReturn === "pause" ? "pause" : "start";
+    }
+    el.rulesScreen.classList.remove("hidden");
+  });
+  el.rulesBack.addEventListener("click", function () {
+    el.rulesScreen.classList.add("hidden");
+    if (rulesFrom === "settings") el.settingsScreen.classList.remove("hidden");
+    else if (rulesFrom === "pause") el.pauseScreen.classList.remove("hidden");
+    else el.startScreen.classList.remove("hidden");
+  });
+
+  el.soundToggle.addEventListener("click", function () {
+    ensureAudio();
+    settings.sound = !settings.sound;
+    saveSettings();
+    applyAudioSettings();
+    if (settings.sound) sfx.nudge(1);
+  });
+  el.volSlider.addEventListener("input", function () {
+    settings.volume = +el.volSlider.value || 0;
+    saveSettings();
+    muted = !settings.sound || settings.volume === 0;
+    if (masterGain) masterGain.gain.value = settings.volume / 100;
+  });
+
+  el.settingsScreen.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+  el.rulesScreen.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+
   document.addEventListener("visibilitychange", function () {
     if (document.hidden && state.mode === "playing") togglePause(true);
   });
@@ -1105,6 +1271,8 @@
   resize();
   keeper.x = W / 2;
   keeper.y = H / 2 + R * 0.22;
+  applyAudioSettings();
+  buildLevelButtons();
   syncHud();
   requestAnimationFrame(function (t) { lastFrame = t; requestAnimationFrame(frame); });
 })();
